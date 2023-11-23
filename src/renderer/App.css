@@ -1,17 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /*
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+
 body {
   position: relative;
-  color: white;
+  color: #fafafa;
   height: 100vh;
-  background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  );
+  background: #242424;
   font-family: sans-serif;
   overflow-y: hidden;
   display: flex;
@@ -19,8 +19,8 @@ body {
   align-items: center;
 }
 
-button {
-  background-color: white;
+.start {
+  background: linear-gradient(135deg, rgba(255,169,0,1) 53%, rgb(255, 247, 0) 100%);
   padding: 10px 20px;
   border-radius: 10px;
   border: none;
@@ -31,9 +31,12 @@ button {
   transition: all ease-in 0.1s;
   cursor: pointer;
   opacity: 0.9;
+  font-weight: bold;
+  color: #fafafa;
+
 }
 
-button:hover {
+.start:hover {
   transform: scale(1.05);
   opacity: 1;
 }
@@ -54,9 +57,25 @@ a:hover {
   text-decoration: none;
 }
 
-.Hello {
+.app-name {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+
+.app-description {
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.hello {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin: 20px 0;
+  justify-content: center;
 }

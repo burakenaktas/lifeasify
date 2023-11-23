@@ -75,23 +75,26 @@ const configuration: webpack.Configuration = {
             },
           },
           'sass-loader',
+          'postcss-loader',
         ],
         include: /\.module\.s?(c|a)ss$/,
       },
       {
         test: /\.s?css$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
         exclude: /\.module\.s?(c|a)ss$/,
       },
       // Fonts
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
+        use: ['postcss-loader'],
       },
       // Images
       {
         test: /\.(png|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
+        use: ['postcss-loader'],
       },
       // SVG
       {
@@ -110,6 +113,7 @@ const configuration: webpack.Configuration = {
             },
           },
           'file-loader',
+          'postcss-loader',
         ],
       },
     ],
