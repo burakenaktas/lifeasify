@@ -96,6 +96,8 @@
     }
   },
   "dependencies": {
+    "classnames": "^2.3.2",
+    "dayjs": "^1.11.10",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^6.1.4",

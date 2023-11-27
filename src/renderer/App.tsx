@@ -2,6 +2,7 @@ import { MemoryRouter as Router, Routes, Route, Link } from 'react-router-dom';
 // import icon from '../../assets/icon.svg';
 import './App.css';
 import Onboarding from './pages/Onboarding';
+import Main from './pages/Main';
 
 function Hello() {
   return (
@@ -15,7 +16,7 @@ function Hello() {
         Focus on the life you live once, not on your chores.
       </p>
 
-      <Link to="onboarding" className="start">
+      <Link to="main" className="start">
         Start
       </Link>
     </div>
@@ -27,6 +28,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Hello />} />
+        <Route path="/main" element={<Main />} />
         <Route path="/onboarding" element={<Onboarding />} />
       </Routes>
     </Router>

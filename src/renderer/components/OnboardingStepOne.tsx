@@ -1,6 +1,12 @@
+import { useState } from 'react';
 import '../styles/onboarding.css';
 
-const EXAMPLE_CHORES = [
+type ExampleChore = {
+  label: string;
+  id: number;
+};
+
+const EXAMPLE_CHORES: ExampleChore[] = [
   { label: '🗑️ Take out the trash', id: 0 },
   { label: '🧼 Do the dishes', id: 1 },
   { label: '🛀 Clean the bathroom', id: 2 },
@@ -9,16 +15,28 @@ const EXAMPLE_CHORES = [
 ];
 
 function OnboardingStepOne() {
+  const [selectedChore, setSelectedChore] = useState(null);
+
   return (
-    <div>
+    <div className="w-full h-full flex flex-col justify-center items-center">
       <h1 className="onboarding-title">Select your repeated chore</h1>
 
-      <div className="bg-white">
-        {EXAMPLE_CHORES.map((chore) => (
-          <div key={chore.id} className="chore-types">
-            {chore.label}
-          </div>
-        ))}
+      <div className="gap-6 w-4/5 flex flex-wrap justify-center items-center">
+        {EXAMPLE_CHORES.map((chore) => {
+          const isSelected = selectedChore
+            ? selectedChore.id === chore.id
+            : false;
+
+          return (
+            <div
+              key={chore.id}
+              className={`chore-types ${isSelected ? 'selected' : ''}`}
+              onClick={() => setSelectedChore(chore)}
+            >
+              {chore.label}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

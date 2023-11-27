@@ -58,7 +58,7 @@ a:hover {
 }
 
 .app-name {
-  font-size: 2rem;
+  font-size: 4rem;
   font-weight: 600;
   margin: 0;
   padding: 0;
@@ -69,8 +69,8 @@ a:hover {
   font-weight: 300;
   margin: 0;
   padding: 0;
-  margin-top: 15px;
-  margin-bottom: 30px;
+  margin-top: 50px;
+  margin-bottom: 15px;
 }
 
 .hello {
