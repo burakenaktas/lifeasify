@@ -3,6 +3,7 @@ import { MemoryRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Onboarding from './pages/Onboarding';
 import Main from './pages/Main';
+import CreateChore from './pages/CreateChore';
 
 function Hello() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/" element={<Hello />} />
         <Route path="/main" element={<Main />} />
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/create-chore" element={<CreateChore />} />
       </Routes>
     </Router>
   );

@@ -1,11 +1,13 @@
 import CHORE_STATUSSES from '../helpers/ChoreStatusses';
 
-type Chores = {
+type Chore = {
   id: number;
   label: string;
   redoAfterDays: number;
-  timeNeedMinutes: number;
+  timeEffortMinute: number;
   status: keyof typeof CHORE_STATUSSES;
+  lastDone: string;
+  nextDue: string;
 };
 
-export default Chores;
+export default Chore;
