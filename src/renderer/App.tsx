@@ -1,6 +1,6 @@
 import { MemoryRouter as Router, Routes, Route, Link } from 'react-router-dom';
-// import icon from '../../assets/icon.svg';
 import './App.css';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import Onboarding from './pages/Onboarding';
 import Main from './pages/Main';
 import CreateChore from './pages/CreateChore';
@@ -25,14 +25,18 @@ function Hello() {
 }
 
 export default function App() {
+  const queryClient = new QueryClient();
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Hello />} />
-        <Route path="/main" element={<Main />} />
-        <Route path="/onboarding" element={<Onboarding />} />
-        <Route path="/create-chore" element={<CreateChore />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Hello />} />
+          <Route path="/main" element={<Main />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/create-chore" element={<CreateChore />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }

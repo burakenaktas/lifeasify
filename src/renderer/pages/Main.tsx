@@ -1,52 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
+import { useQuery } from 'react-query';
 import ConvertMinutes from '../../helpers/ConvertMinutes';
 import CHORE_STATUSSES from '../../helpers/ChoreStatusses';
 import Chore from '../../types/types';
-import store from '../../store/store';
+// import store from '../../store/store';
 
 function Main() {
   const push = useNavigate();
-  const chores = store((state) => state.chores);
-  const setChores = store((state) => state.chores);
+  // const chores = store((state) => state.chores);
+  // const setChores = store((state) => state.chores);
 
-  const todaysChores: Chore[] = [
-    {
-      id: 0,
-      label: 'Take out the trash',
-      redoAfterDays: 2,
-      timeEffortMinute: 10,
-      status: 'DONE',
-      lastDone: '',
-      nextDue: '28-11-2023',
-    },
-    {
-      id: 1,
-      label: 'Do the dishes',
-      redoAfterDays: 2,
-      timeEffortMinute: 10,
-      status: 'NOT_DONE',
-      lastDone: '',
-      nextDue: '28-11-2023',
-    },
-    {
-      id: 2,
-      label: 'Love the dishes',
-      redoAfterDays: 2,
-      timeEffortMinute: 10,
-      status: 'AFTER_DEADLINE',
-      lastDone: '',
-      nextDue: '28-11-2023',
-    },
-  ];
+  const { data: todaysChores } = useQuery('chores', async () => {
+    const res = await fetch(`http://localhost:8000/todays-chores`);
+    console.log(res);
+    return res.json();
+  });
 
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="mt-2">{dayjs().format('DD MMM YYYY')}</div>
       <h1 className="text-4xl mb-4">Today's chores</h1>
       <div className="flex flex-col justify-center items-center">
-        {todaysChores.map((chore) => (
+        {todaysChores?.map((chore: Chore) => (
           <div
             key={chore.id}
             className="flex gap-4 my-1 items-center justify-between"
@@ -55,12 +32,15 @@ function Main() {
               type="checkbox"
               checked={CHORE_STATUSSES[chore.status].isDone}
             />
-            <div className="w-44">{chore.label}</div>
-            <div className="w-44">{chore.timeEffortMinute} minutes</div>
-            <div className="w-44">{chore.redoAfterDays} days to the next</div>
+            <div className="w-44">{chore.name}</div>
+            <div className="w-44">{chore.timeEffortMinutes} minutes</div>
+            <div className="w-44">
+              {chore.repeatFrequencyDays} days to the next
+            </div>
             <div className="w-44 truncate">
               {ConvertMinutes(
-                (chore.timeEffortMinute * 75 * 365) / chore.redoAfterDays,
+                (chore.timeEffortMinutes * 75 * 365) /
+                  chore.repeatFrequencyDays,
               )}
             </div>
             <div className="w-44">

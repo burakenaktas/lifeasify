@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
 import ConvertMinutes from '../../helpers/ConvertMinutes';
+import dayjs from 'dayjs';
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -35,10 +36,11 @@ const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(
 function CreateChore() {
   const push = useNavigate();
   const [values, setValues] = useState({
-    choreName: '',
-    timeEffortMinute: null,
-    redoAfterDays: null,
-    date: '',
+    name: '',
+    timeEffortMinutes: null,
+    repeatFrequencyDays: null,
+    note: '',
+    nextDue: dayjs().format('YYYY-MM-DD'),
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +48,23 @@ function CreateChore() {
       ...values,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const handleCreate = () => {
+    fetch('http://localhost:8000/add-chore', {
+      body: JSON.stringify(values),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        return push('/main');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -64,19 +83,19 @@ function CreateChore() {
             <TextField
               id="standard-basic"
               color="info"
-              name="choreName"
+              name="name"
               label="Chore Name"
               variant="standard"
               onChange={handleChange}
-              value={values.choreName}
+              value={values.name}
             />
 
             <TextField
               id="formatted-numberformat-input"
               onChange={handleChange}
               label="Time Effort (minute)"
-              name="timeEffortMinute"
-              value={values.timeEffortMinute}
+              name="timeEffortMinutes"
+              value={values.timeEffortMinutes}
               InputProps={{
                 inputComponent: NumericFormatCustom as any,
               }}
@@ -85,9 +104,9 @@ function CreateChore() {
 
             <TextField
               label="Repeat Frequency (day)"
-              value={values.redoAfterDays}
+              value={values.repeatFrequencyDays}
               onChange={handleChange}
-              name="redoAfterDays"
+              name="repeatFrequencyDays"
               id="formatted-numberformat-input"
               InputProps={{
                 inputComponent: NumericFormatCustom as any,
@@ -95,20 +114,27 @@ function CreateChore() {
               variant="standard"
             />
 
+            <TextField
+              label="Note"
+              value={values.note}
+              onChange={handleChange}
+              name="note"
+              variant="standard"
+            />
+
             <div className="text-xs mt-2 -mb-2 text-gray-800">Start Date</div>
             <input
               type="date"
               className="px-2 text-gray-700"
-              placeholder="Start date"
-              name="date"
-              value={values.date}
+              name="nextDue"
+              value={values.nextDue}
               onChange={handleChange}
             />
           </div>
 
           <div
             className="bg-blue-600 rounded-full px-2 mt-4 py-1 text-center text-md cursor-pointer hover:bg-blue-700"
-            onClick={}
+            onClick={handleCreate}
           >
             Create
           </div>
@@ -119,12 +145,13 @@ function CreateChore() {
             Back
           </div>
 
-          <div className="mt-2 max-w-xs mx-auto text-center">
-            {values.timeEffortMinute && values.redoAfterDays && (
+          <div className="mt-2 max-w-full text-center">
+            {values.timeEffortMinutes && values.repeatFrequencyDays && (
               <div className="text-gray-400 opacity-50 text-xs">
                 * It will take{' '}
                 {ConvertMinutes(
-                  (values.timeEffortMinute * 75 * 365) / values.redoAfterDays,
+                  (values.timeEffortMinutes * 75 * 365) /
+                    values.repeatFrequencyDays,
                 )}{' '}
                 days along your life.
               </div>
