@@ -1,7 +1,8 @@
+// eslint-disable-next-line import/no-cycle
 import CHORE_STATUSSES from '../helpers/ChoreStatusses';
 
 type Chore = {
-  id: number;
+  _id: string;
   name: string;
   repeatFrequencyDays: number;
   timeEffortMinutes: number;
