@@ -77,7 +77,7 @@ function CreateChore() {
             className="flex flex-col gap-4 p-8 rounded-lg"
             style={{
               background:
-                'linear-gradient(to right bottom, #FFDEAD 40%, #FFF5EE 100%)',
+                'linear-gradient(to right bottom, #fffbe4 40%, #FFF5EE 100%)',
             }}
           >
             <TextField
@@ -145,7 +145,7 @@ function CreateChore() {
             Back
           </div>
 
-          <div className="mt-2 max-w-full text-center">
+          <div className="mt-2 text-center w-60 h-12">
             {values.timeEffortMinutes && values.repeatFrequencyDays && (
               <div className="text-gray-400 opacity-50 text-xs">
                 * It will take{' '}
