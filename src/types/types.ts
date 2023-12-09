@@ -10,6 +10,7 @@ type Chore = {
   status: keyof typeof CHORE_STATUSSES;
   lastDone: string;
   nextDue: string;
+  isOneTime: boolean;
 };
 
 export default Chore;

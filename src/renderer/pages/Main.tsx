@@ -82,12 +82,20 @@ function Main() {
                 <div className="w-44 truncate">{chore.name}</div>
                 <div className="w-44">{chore.timeEffortMinutes} minutes</div>
                 <div className="w-44">
-                  {chore.repeatFrequencyDays} days to the next
+                  {chore.isOneTime
+                    ? "Doesn't repeat"
+                    : `Repeats every ${
+                        chore.repeatFrequencyDays === 1
+                          ? 'single'
+                          : chore.repeatFrequencyDays
+                      } days`}
                 </div>
                 <div className="w-44 truncate">
                   {ConvertMinutes(
-                    (chore.timeEffortMinutes * 75 * 365) /
-                      chore.repeatFrequencyDays,
+                    chore.isOneTime
+                      ? chore.timeEffortMinutes
+                      : (chore.timeEffortMinutes * 75 * 365) /
+                          chore.repeatFrequencyDays,
                   )}
                 </div>
                 <div

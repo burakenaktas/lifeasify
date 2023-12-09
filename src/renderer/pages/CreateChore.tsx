@@ -41,7 +41,9 @@ function CreateChore() {
     repeatFrequencyDays: null,
     note: '',
     nextDue: dayjs().format('YYYY-MM-DD'),
+    isOneTime: false,
   });
+  console.log(values);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({
@@ -102,17 +104,19 @@ function CreateChore() {
               variant="standard"
             />
 
-            <TextField
-              label="Repeat Frequency (day)"
-              value={values.repeatFrequencyDays}
-              onChange={handleChange}
-              name="repeatFrequencyDays"
-              id="formatted-numberformat-input"
-              InputProps={{
-                inputComponent: NumericFormatCustom as any,
-              }}
-              variant="standard"
-            />
+            {!values.isOneTime && (
+              <TextField
+                label="Repeat Frequency (day)"
+                value={values.repeatFrequencyDays}
+                onChange={handleChange}
+                name="repeatFrequencyDays"
+                id="formatted-numberformat-input"
+                InputProps={{
+                  inputComponent: NumericFormatCustom as any,
+                }}
+                variant="standard"
+              />
+            )}
 
             <TextField
               label="Note"
@@ -130,6 +134,23 @@ function CreateChore() {
               value={values.nextDue}
               onChange={handleChange}
             />
+
+            <div className="flex">
+              <input
+                type="checkbox"
+                name="isOneTime"
+                value={values.isOneTime}
+                onChange={() => {
+                  console.log(values.isOneTime);
+                  setValues({
+                    ...values,
+                    isOneTime: !values.isOneTime,
+                    repeatFrequencyDays: null,
+                  });
+                }}
+              />
+              <div className="ml-1 text-black text-xs">One time chore</div>
+            </div>
           </div>
 
           <div
@@ -146,16 +167,19 @@ function CreateChore() {
           </div>
 
           <div className="mt-2 text-center w-60 h-12">
-            {values.timeEffortMinutes && values.repeatFrequencyDays && (
-              <div className="text-gray-400 opacity-50 text-xs">
-                * It will take{' '}
-                {ConvertMinutes(
-                  (values.timeEffortMinutes * 75 * 365) /
-                    values.repeatFrequencyDays,
-                )}{' '}
-                days along your life.
-              </div>
-            )}
+            {values.timeEffortMinutes &&
+              (values.repeatFrequencyDays || values.isOneTime) && (
+                <div className="text-gray-400 opacity-50 text-xs">
+                  * It will take{' '}
+                  {ConvertMinutes(
+                    values.isOneTime
+                      ? values.timeEffortMinutes
+                      : (values.timeEffortMinutes * 75 * 365) /
+                          values.repeatFrequencyDays,
+                  )}{' '}
+                  days along your life.
+                </div>
+              )}
           </div>
         </div>
       </div>
