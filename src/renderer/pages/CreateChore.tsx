@@ -43,7 +43,6 @@ function CreateChore() {
     nextDue: dayjs().format('YYYY-MM-DD'),
     isOneTime: false,
   });
-  console.log(values);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({
@@ -61,12 +60,9 @@ function CreateChore() {
       },
     })
       .then((res) => {
-        console.log(res);
         return push('/main');
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   return (
