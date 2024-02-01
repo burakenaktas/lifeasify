@@ -1,11 +1,27 @@
-import { MemoryRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import {
+  MemoryRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from 'react-router-dom';
 import './App.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { useEffect } from 'react';
 import Onboarding from './pages/Onboarding';
 import Main from './pages/Main';
 import CreateChore from './pages/CreateChore';
 
 function Hello() {
+  const push = useNavigate();
+
+  useEffect(() => {
+    const isFirstEnterance = window.localStorage.getItem('isFirstEnterance');
+    if (isFirstEnterance === 'false') {
+      push('/main');
+    }
+  }, [push]);
+
   return (
     <div className="hello">
       {/* <div className="Hello">
@@ -14,10 +30,14 @@ function Hello() {
       <h1 className="app-name">Lifeasify</h1>
       <p className="app-description">
         {/* eslint-disable-next-line react/no-unescaped-entities */}
-        Focus on the life you live once, not on your chores.
+        Focus on the life you live once.
       </p>
 
-      <Link to="main" className="start">
+      <Link
+        to="main"
+        className="start"
+        onClick={() => window.localStorage.setItem('isFirstEnterance', 'false')}
+      >
         Start
       </Link>
     </div>
