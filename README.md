@@ -1,4 +1,4 @@
 <div>
-Focus on the life you live once, not on your chores.
+Focus on the life you live once.
 Lifeasify, desktop app.
 </div>
