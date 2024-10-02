@@ -1,12 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useState } from 'react';
-import classNames from 'classnames';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ConvertMinutes from '../../helpers/ConvertMinutes';
-import { getChoreStatus } from '../../helpers/ChoreStatusses';
 import Chore from '../../types/types';
+import Mission from './Missions/Mission';
 
 function TodaysChores() {
   const push = useNavigate();
@@ -20,6 +16,14 @@ function TodaysChores() {
     const res = await fetch(`http://localhost:8000/todays-chores`);
     return res.json();
   });
+
+  const { data: upcomingChores } = useQuery(
+    ['chores', 'upcoming'],
+    async () => {
+      const res = await fetch(`http://localhost:8000/upcoming-chores`);
+      return res.json();
+    },
+  );
 
   const { mutate: completeChore, isLoading: isCheckingToDo } = useMutation({
     mutationFn: async (id: string) => {
@@ -58,88 +62,60 @@ function TodaysChores() {
   };
 
   return (
-    <div className="container">
-      <div className="relative w-full flex flex-col items-center max-h-96 overflow-scroll">
-        <div className="flex flex-col justify-center items-center">
+    <div className="container h-full">
+      <div className="relative h-full w-full flex flex-col items-center">
+        <div className="flex flex-col h-full justify-center items-center">
+          <div className="text-2xl mb-4 w-full text-center text-white">
+            Today&apos;s Tasks
+          </div>
           {todaysChores?.length > 0 ? (
             todaysChores?.map((chore: Chore) => {
-              const isCompleted = getChoreStatus(chore).label === 'Done';
               return (
-                <div
-                  key={chore._id}
-                  className={
-                    'flex gap-4 items-center justify-between hover:bg-gray-700 rounded-full py-1 my-1 px-4 mr-4'
-                  }
-                >
-                  <input
-                    type="checkbox"
-                    disabled={isCheckingToDo}
-                    checked={isCompleted}
-                    onChange={() => checkButtonClicked(chore._id)}
-                  />
-                  <div className="w-44 truncate">{chore.name}</div>
-                  <div className="w-44">{chore.timeEffortMinutes} minutes</div>
-                  <div className="w-44">
-                    {chore.isOneTime
-                      ? "Doesn't repeat"
-                      : `Repeats every ${
-                          chore.repeatFrequencyDays === 1
-                            ? 'single'
-                            : chore.repeatFrequencyDays
-                        } days`}
-                  </div>
-                  <div className="w-44 truncate">
-                    {ConvertMinutes(
-                      chore.isOneTime
-                        ? chore.timeEffortMinutes
-                        : (chore.timeEffortMinutes * 75 * 365) /
-                            chore.repeatFrequencyDays,
-                    )}
-                  </div>
-                  <div
-                    className={classNames(
-                      'rounded-full w-32 text-center text-white',
-                      // eslint-disable-next-line no-nested-ternary
-                      getChoreStatus(chore).color,
-                    )}
-                  >
-                    {getChoreStatus(chore).label}
-                  </div>
-                  <div className="flex">
-                    <div className="cursor-pointer" onClick={() => push('/')}>
-                      <EditIcon />
-                    </div>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => setDeletingChore(chore)}
-                    >
-                      <DeleteOutlineOutlinedIcon className="text-red-600" />
-                    </div>
-                  </div>
-                </div>
+                <Mission
+                  mission={chore}
+                  checkButtonClicked={checkButtonClicked}
+                  setDeletingChore={setDeletingChore}
+                  isCheckingToDo={isCheckingToDo}
+                />
               );
             })
           ) : (
-            <div className="text-xl mt-8 text-center">
+            <div className="flex flex-col justify-center items-center">
               No chores for today! Enjoy your day!
             </div>
           )}
         </div>
 
+        {upcomingChores?.length > 0 ? (
+          <div className="flex flex-col h-full justify-center items-center">
+            <div className="text-2xl mb-4 w-full text-center text-white">
+              Upcoming Tasks
+            </div>
+            {upcomingChores?.map((chore: Chore) => {
+              return (
+                <Mission
+                  mission={chore}
+                  checkButtonClicked={checkButtonClicked}
+                  setDeletingChore={setDeletingChore}
+                  isCheckingToDo={isCheckingToDo}
+                />
+              );
+            })}
+          </div>
+        ) : null}
+
         {deletingChore && (
           <div className="fixed top-0 z-50 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
             <div className="bg-black rounded-lg px-12 py-6">
               <div className="text-lg border-b border-gray-800 text-center pb-2">
-                Are you sure about deleting the chore named
+                You are deleting
                 <div className="flex justify-center">
-                  <div className="text-yellow-300 flex">
-                    {deletingChore.name}
-                  </div>
-                  ?
+                  <i>{deletingChore.name}</i>c
                 </div>
               </div>
               <div className="flex gap-4 mt-4 justify-end">
                 <div
+                  aria-hidden="true"
                   className="bg-red-600 rounded-full px-4 py-1 text-center text-md cursor-pointer hover:bg-red-700"
                   onClick={() => {
                     deleteChore(deletingChore._id);
@@ -149,6 +125,7 @@ function TodaysChores() {
                   Yes, delete
                 </div>
                 <div
+                  aria-hidden="true"
                   className="bg-gray-600 rounded-full px-4 py-1 text-center text-md cursor-pointer hover:bg-gray-700"
                   onClick={() => setDeletingChore(null)}
                 >
@@ -158,14 +135,15 @@ function TodaysChores() {
             </div>
           </div>
         )}
-      </div>
 
-      <div className="w-full flex justify-center items-center">
-        <div
-          className="bg-blue-600 rounded-full px-6 py-1 my-2 text-xl cursor-pointer hover:bg-blue-700"
-          onClick={() => push('/create-chore')}
-        >
-          Create Chore
+        <div className="absolute bottom-0 w-full flex justify-center items-center">
+          <div
+            aria-hidden="true"
+            className="bg-gray-800 rounded-md px-6 py-1 my-2 text-lg cursor-pointer hover:bg-gray-900"
+            onClick={() => push('/create-chore')}
+          >
+            Create Chore
+          </div>
         </div>
       </div>
     </div>

@@ -16,8 +16,8 @@ function Hello() {
   const push = useNavigate();
 
   useEffect(() => {
-    const isFirstEnterance = window.localStorage.getItem('isFirstEnterance');
-    if (isFirstEnterance === 'false') {
+    const isFirstEntrance = window.localStorage.getItem('isFirstEntrance');
+    if (isFirstEntrance === 'false') {
       push('/main');
     }
   }, [push]);
@@ -36,7 +36,7 @@ function Hello() {
       <Link
         to="main"
         className="start"
-        onClick={() => window.localStorage.setItem('isFirstEnterance', 'false')}
+        onClick={() => window.localStorage.setItem('isFirstEntrance', 'false')}
       >
         Start
       </Link>

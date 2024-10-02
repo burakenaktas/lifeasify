@@ -2,6 +2,7 @@ import { TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import dayjs from 'dayjs';
+import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import ConvertMinutes from '../../helpers/ConvertMinutes';
 
@@ -59,25 +60,21 @@ function CreateChore() {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
+      .then(() => {
         return push('/main');
       })
-      .catch((err) => {});
+      .catch(() => {});
   };
 
   return (
     <div>
-      <div className="flex flex-row">
-        <div>
-          <h1 className="text-2xl mb-4 w-full text-center">Create Chore</h1>
+      <div className="flex flex-col">
+        <h1 className="text-2xl mb-4 w-full text-center text-white">
+          Create Chore
+        </h1>
 
-          <div
-            className="flex flex-col gap-4 p-8 rounded-lg"
-            style={{
-              background:
-                'linear-gradient(to right bottom, #fffbe4 40%, #FFF5EE 100%)',
-            }}
-          >
+        <div className="bg-gray-200 p-6 py-2 rounded-lg">
+          <div className="flex flex-col gap-4 p-8 py-4 rounded-lg">
             <TextField
               id="standard-basic"
               color="info"
@@ -100,25 +97,19 @@ function CreateChore() {
               variant="standard"
             />
 
-            {!values.isOneTime && (
-              <TextField
-                label="Repeat Frequency (day)"
-                value={values.repeatFrequencyDays}
-                onChange={handleChange}
-                name="repeatFrequencyDays"
-                id="formatted-numberformat-input"
-                InputProps={{
-                  inputComponent: NumericFormatCustom as any,
-                }}
-                variant="standard"
-              />
-            )}
-
             <TextField
-              label="Note"
-              value={values.note}
+              label="Repeat Frequency (day)"
+              value={values.repeatFrequencyDays}
               onChange={handleChange}
-              name="note"
+              name="repeatFrequencyDays"
+              id="formatted-numberformat-input"
+              InputProps={{
+                inputComponent: NumericFormatCustom as any,
+              }}
+              className={classNames(
+                'transition duration-300',
+                values.isOneTime && 'opacity-0 invisible',
+              )}
               variant="standard"
             />
 
@@ -131,13 +122,20 @@ function CreateChore() {
               onChange={handleChange}
             />
 
+            <TextField
+              label="Note"
+              value={values.note}
+              onChange={handleChange}
+              name="note"
+              variant="standard"
+            />
+
             <div className="flex">
               <input
                 type="checkbox"
                 name="isOneTime"
                 value={values.isOneTime}
                 onChange={() => {
-                  console.log(values.isOneTime);
                   setValues({
                     ...values,
                     isOneTime: !values.isOneTime,
@@ -150,13 +148,16 @@ function CreateChore() {
           </div>
 
           <div
-            className="bg-blue-600 rounded-full px-2 mt-4 py-1 text-center text-md cursor-pointer hover:bg-blue-700"
+            aria-hidden="true"
+            className="bg-black rounded-full px-2 mt-4 py-1 text-center text-md cursor-pointer  hover:bg-gray-800"
             onClick={handleCreate}
           >
             Create
           </div>
+
           <div
-            className="mt-2 text-center cursor-pointer rounded-full hover:bg-gray-500 hover:bg-opacity-50 px-2 py-1"
+            aria-hidden="true"
+            className="mt-2 text-center cursor-pointer rounded-full text-gray-800 hover:bg-gray-300 hover:bg-opacity-50 px-2 py-1"
             onClick={() => push('/main')}
           >
             Back

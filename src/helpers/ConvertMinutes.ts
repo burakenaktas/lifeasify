@@ -5,7 +5,9 @@ export default function ConvertMinutes(num: number) {
 
   if (d > 0) {
     return d + ' days, ' + h + ' hours, ' + m + ' minutes';
-  } else {
+  } else if (h > 0) {
     return h + ' hours, ' + m + ' minutes';
+  } else {
+    return m + ' minutes';
   }
 }
