@@ -53,7 +53,7 @@ function CreateChore() {
   };
 
   const handleCreate = () => {
-    fetch('http://localhost:8000/add-chore', {
+    fetch('https://api.theonlypsychologist.com/add-chore', {
       body: JSON.stringify(values),
       method: 'POST',
       headers: {

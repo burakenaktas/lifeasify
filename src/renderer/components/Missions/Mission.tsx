@@ -3,12 +3,14 @@ import ConvertMinutes from '../../../helpers/ConvertMinutes';
 import classNames from 'classnames';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { getChoreStatus } from '../../../helpers/ChoreStatusses';
+import dayjs from 'dayjs';
 
 type MissionFProps = {
   mission: Chore;
   checkButtonClicked: (id: string) => void;
   setDeletingChore: (chore: Chore) => void;
   isCheckingToDo: boolean;
+  isUpcomingToDo?: boolean;
 };
 
 function Mission({
@@ -16,20 +18,25 @@ function Mission({
   checkButtonClicked,
   setDeletingChore,
   isCheckingToDo,
+  isUpcomingToDo,
 }: MissionFProps) {
   const isCompleted = getChoreStatus(mission).label === 'Done';
-
+  isUpcomingToDo ? console.log(mission) : null;
   return (
     <div
       key={mission._id}
       className="flex gap-4 items-center justify-between hover:bg-gray-800 rounded-full py-1 my-1 px-4 mr-4"
     >
-      <input
-        type="checkbox"
-        disabled={isCheckingToDo}
-        checked={isCompleted}
-        onChange={() => checkButtonClicked(mission._id)}
-      />
+      {isUpcomingToDo ? (
+        <input type="checkbox" disabled className="invisible" />
+      ) : (
+        <input
+          type="checkbox"
+          disabled={isCheckingToDo}
+          checked={isCompleted}
+          onChange={() => checkButtonClicked(mission._id)}
+        />
+      )}
       <div className="w-44 truncate">{mission.name}</div>
       <div className="w-44 truncate">{mission.timeEffortMinutes} minutes</div>
       <div className="w-44 truncate">
@@ -42,12 +49,14 @@ function Mission({
             } days`}
       </div>
       <div className="w-44 truncate">
-        {ConvertMinutes(
-          mission.isOneTime
-            ? mission.timeEffortMinutes
-            : (mission.timeEffortMinutes * 75 * 365) /
-                mission.repeatFrequencyDays,
-        )}
+        {isUpcomingToDo
+          ? ConvertMinutes(dayjs(mission.nextDue).diff(dayjs(), 'minute'))
+          : ConvertMinutes(
+              mission.isOneTime
+                ? mission.timeEffortMinutes
+                : (mission.timeEffortMinutes * 75 * 365) /
+                    mission.repeatFrequencyDays,
+            )}
       </div>
       <div className="text-white w-32 truncate flex items-center justify-center">
         <div
