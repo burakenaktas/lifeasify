@@ -134,4 +134,7 @@ app
       if (mainWindow === null) createWindow();
     });
   })
+  .then(() => {
+    mainWindow.webContents.openDevTools();
+  })
   .catch(console.log);
