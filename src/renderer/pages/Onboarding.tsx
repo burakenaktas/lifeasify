@@ -1,11 +1,11 @@
-import OnboardingStepOne from '../components/OnboardingStepOne';
+// import OnboardingStepOne from '../components/OnboardingStepOne';
 
-function Onboarding() {
-  return (
-    <div>
-      <OnboardingStepOne />
-    </div>
-  );
-}
+// function Onboarding() {
+//   return (
+//     <div>
+//       <OnboardingStepOne />
+//     </div>
+//   );
+// }
 
-export default Onboarding;
+// export default Onboarding;

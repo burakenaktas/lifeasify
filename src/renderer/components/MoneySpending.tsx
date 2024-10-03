@@ -5,7 +5,7 @@ function MoneySpending() {
         <div
           aria-hidden="true"
           className="bg-green-600 rounded-full px-6 py-1 my-2 text-xl cursor-pointer hover:bg-blue-700"
-          onClick={() => push('/create-chore')}
+          // onClick={() => push('/create-chore')}
         >
           Add Spending
         </div>

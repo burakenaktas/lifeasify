@@ -134,7 +134,7 @@ function CreateChore() {
               <input
                 type="checkbox"
                 name="isOneTime"
-                value={values.isOneTime}
+                value={values.isOneTime ? 1 : 0}
                 onChange={() => {
                   setValues({
                     ...values,
@@ -172,7 +172,7 @@ function CreateChore() {
                     values.isOneTime
                       ? values.timeEffortMinutes
                       : (values.timeEffortMinutes * 75 * 365) /
-                          values.repeatFrequencyDays,
+                          (values.repeatFrequencyDays ?? 1),
                   )}{' '}
                   days along your life.
                 </div>

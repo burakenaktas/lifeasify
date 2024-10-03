@@ -8,7 +8,7 @@ import {
 import './App.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useEffect } from 'react';
-import Onboarding from './pages/Onboarding';
+// import Onboarding from './pages/Onboarding';
 import Main from './pages/Main';
 import CreateChore from './pages/CreateChore';
 
@@ -53,7 +53,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Hello />} />
           <Route path="/main" element={<Main />} />
-          <Route path="/onboarding" element={<Onboarding />} />
+          {/* <Route path="/onboarding" element={<Onboarding />} /> */}
           <Route path="/create-chore" element={<CreateChore />} />
         </Routes>
       </Router>

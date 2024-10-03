@@ -123,7 +123,7 @@ function TodaysChores() {
                   aria-hidden="true"
                   className="bg-red-600 rounded-full px-4 py-1 text-center text-md cursor-pointer hover:bg-red-700"
                   onClick={() => {
-                    deleteChore(deletingChore._id);
+                    deleteChore();
                     setDeletingChore(null);
                   }}
                 >
