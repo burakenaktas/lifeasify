@@ -199,7 +199,6 @@
     ],
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
-      "devtools": true,
       "target": {
         "target": "default",
         "arch": [
