@@ -55,7 +55,7 @@ function CreateChore() {
 
   const handleCreate = () => {
     // VALIDATIONS AND CONTROLS
-    if (values.timeEffortMinutes === null) {
+    if (!values.timeEffortMinutes) {
       setNoTimeEffort(true);
       return;
     } else {
@@ -64,12 +64,12 @@ function CreateChore() {
 
     const creatingChore = values;
 
-    if (creatingChore.repeatFrequencyDays === null) {
+    if (!creatingChore.repeatFrequencyDays) {
       creatingChore.isOneTime = true;
     }
     // VALIDATIONS AND CONTROLS COMPLETED
 
-    fetch('http://localhost:8000/add-chore', {
+    fetch('https://api.theonlypsychologist.com/add-chore', {
       body: JSON.stringify(creatingChore),
       method: 'POST',
       headers: {

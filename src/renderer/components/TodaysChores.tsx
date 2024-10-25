@@ -13,14 +13,18 @@ function TodaysChores() {
   const [deletingChore, setDeletingChore] = useState<Chore | null>(null);
 
   const { data: todaysChores } = useQuery('chores', async () => {
-    const res = await fetch(`http://localhost:8000/todays-chores`);
+    const res = await fetch(
+      `https://api.theonlypsychologist.com/todays-chores`,
+    );
     return res.json();
   });
 
   const { data: upcomingChores } = useQuery(
     ['chores', 'upcoming'],
     async () => {
-      const res = await fetch(`http://localhost:8000/upcoming-chores`);
+      const res = await fetch(
+        `https://api.theonlypsychologist.com/upcoming-chores`,
+      );
       return res.json();
     },
   );
@@ -28,7 +32,7 @@ function TodaysChores() {
   const { mutate: completeChore, isLoading: isCheckingToDo } = useMutation({
     mutationFn: async (id: string) => {
       const response = await fetch(
-        `http://localhost:8000/complete-chore/${id}`,
+        `https://api.theonlypsychologist.com/complete-chore/${id}`,
       );
 
       // eslint-disable-next-line consistent-return
@@ -44,7 +48,7 @@ function TodaysChores() {
       if (isDeletingChore) return;
 
       const response = await fetch(
-        `http://localhost:8000/chores/${deletingChore?._id}`,
+        `https://api.theonlypsychologist.com/chores/${deletingChore?._id}`,
         {
           method: 'DELETE',
         },
