@@ -44,6 +44,7 @@ function CreateChore() {
     nextDue: dayjs().format('YYYY-MM-DD'),
     isOneTime: false,
   });
+  const [noTimeEffort, setNoTimeEffort] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({
@@ -53,14 +54,20 @@ function CreateChore() {
   };
 
   const handleCreate = () => {
+    // VALIDATIONS AND CONTROLS
+    if (values.timeEffortMinutes === null) {
+      setNoTimeEffort(true);
+      return;
+    } else {
+      setNoTimeEffort(false);
+    }
+
     const creatingChore = values;
 
     if (creatingChore.repeatFrequencyDays === null) {
-      console.log(creatingChore);
       creatingChore.isOneTime = true;
     }
-
-    console.log(creatingChore);
+    // VALIDATIONS AND CONTROLS COMPLETED
 
     fetch('http://localhost:8000/add-chore', {
       body: JSON.stringify(creatingChore),
@@ -99,6 +106,7 @@ function CreateChore() {
               onChange={handleChange}
               label="Time Effort (minute)"
               name="timeEffortMinutes"
+              error={noTimeEffort}
               value={values.timeEffortMinutes}
               InputProps={{
                 inputComponent: NumericFormatCustom as any,
