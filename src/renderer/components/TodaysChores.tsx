@@ -68,32 +68,36 @@ function TodaysChores() {
           <div className="text-2xl mb-4 w-full text-center text-white">
             Today&apos;s Tasks
           </div>
-          <div className="flex gap-4 items-center justify-between bg-gray-200 text-black rounded-full py-1 my-1 px-4 mr-4">
-            <div className="w-44  flex justify-center truncate border-r border-black">
-              Task
-            </div>
-            <div className="w-44 flex justify-center border-r border-black truncate">
-              It takes
-            </div>
-            <div className="w-44 flex justify-center border-r border-black truncate">
-              Repeats every
-            </div>
-            <div className="w-44 flex justify-center border-r border-black truncate">
-              It'll take in a life
-            </div>
-            <div className="w-44 flex justify-center truncate">Status</div>
-          </div>
+
           {todaysChores?.length > 0 ? (
-            todaysChores?.map((chore: Chore) => {
-              return (
-                <Mission
-                  mission={chore}
-                  checkButtonClicked={checkButtonClicked}
-                  setDeletingChore={setDeletingChore}
-                  isCheckingToDo={isCheckingToDo}
-                />
-              );
-            })
+            <>
+              <div className="flex gap-4 items-center justify-between bg-gray-200 text-black rounded-full py-1 my-1 px-4 mr-4">
+                <div className="w-44  flex justify-center truncate border-r border-black">
+                  Task
+                </div>
+                <div className="w-44 flex justify-center border-r border-black truncate">
+                  It takes
+                </div>
+                <div className="w-44 flex justify-center border-r border-black truncate">
+                  Repeats every
+                </div>
+                <div className="w-44 flex justify-center border-r border-black truncate">
+                  It'll take in a life
+                </div>
+                <div className="w-44 flex justify-center truncate">Status</div>
+              </div>
+
+              {todaysChores?.map((chore: Chore) => {
+                return (
+                  <Mission
+                    mission={chore}
+                    checkButtonClicked={checkButtonClicked}
+                    setDeletingChore={setDeletingChore}
+                    isCheckingToDo={isCheckingToDo}
+                  />
+                );
+              })}
+            </>
           ) : (
             <div className="flex flex-col justify-center items-center">
               No chores for today! Enjoy your day!

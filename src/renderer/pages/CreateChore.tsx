@@ -53,8 +53,17 @@ function CreateChore() {
   };
 
   const handleCreate = () => {
+    const creatingChore = values;
+
+    if (creatingChore.repeatFrequencyDays === null) {
+      console.log(creatingChore);
+      creatingChore.isOneTime = true;
+    }
+
+    console.log(creatingChore);
+
     fetch('http://localhost:8000/add-chore', {
-      body: JSON.stringify(values),
+      body: JSON.stringify(creatingChore),
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
