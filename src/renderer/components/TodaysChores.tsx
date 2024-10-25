@@ -13,18 +13,14 @@ function TodaysChores() {
   const [deletingChore, setDeletingChore] = useState<Chore | null>(null);
 
   const { data: todaysChores } = useQuery('chores', async () => {
-    const res = await fetch(
-      `https://api.theonlypsychologist.com/todays-chores`,
-    );
+    const res = await fetch(`http://localhost:8000/todays-chores`);
     return res.json();
   });
 
   const { data: upcomingChores } = useQuery(
     ['chores', 'upcoming'],
     async () => {
-      const res = await fetch(
-        `https://api.theonlypsychologist.com/upcoming-chores`,
-      );
+      const res = await fetch(`http://localhost:8000/upcoming-chores`);
       return res.json();
     },
   );
@@ -32,7 +28,7 @@ function TodaysChores() {
   const { mutate: completeChore, isLoading: isCheckingToDo } = useMutation({
     mutationFn: async (id: string) => {
       const response = await fetch(
-        `https://api.theonlypsychologist.com/complete-chore/${id}`,
+        `http://localhost:8000/complete-chore/${id}`,
       );
 
       // eslint-disable-next-line consistent-return
@@ -48,7 +44,7 @@ function TodaysChores() {
       if (isDeletingChore) return;
 
       const response = await fetch(
-        `https://api.theonlypsychologist.com/chores/${deletingChore?._id}`,
+        `http://localhost:8000/chores/${deletingChore?._id}`,
         {
           method: 'DELETE',
         },
@@ -72,6 +68,21 @@ function TodaysChores() {
           <div className="text-2xl mb-4 w-full text-center text-white">
             Today&apos;s Tasks
           </div>
+          <div className="flex gap-4 items-center justify-between bg-gray-200 text-black rounded-full py-1 my-1 px-4 mr-4">
+            <div className="w-44  flex justify-center truncate border-r border-black">
+              Task
+            </div>
+            <div className="w-44 flex justify-center border-r border-black truncate">
+              It takes
+            </div>
+            <div className="w-44 flex justify-center border-r border-black truncate">
+              Repeats every
+            </div>
+            <div className="w-44 flex justify-center border-r border-black truncate">
+              It'll take in a life
+            </div>
+            <div className="w-44 flex justify-center truncate">Status</div>
+          </div>
           {todaysChores?.length > 0 ? (
             todaysChores?.map((chore: Chore) => {
               return (
@@ -94,6 +105,21 @@ function TodaysChores() {
           <div className="flex flex-col h-full justify-center items-center">
             <div className="text-2xl mb-4 w-full text-center text-white">
               Upcoming Tasks
+            </div>
+            <div className="flex gap-4 items-center justify-between bg-gray-200 text-black rounded-full py-1 my-1 px-4 mr-4">
+              <div className="w-44  flex justify-center truncate border-r border-black">
+                Task
+              </div>
+              <div className="w-44 flex justify-center border-r border-black truncate">
+                It takes
+              </div>
+              <div className="w-44 flex justify-center border-r border-black truncate">
+                Repeats every
+              </div>
+              <div className="w-44 flex justify-center border-r border-black truncate">
+                When
+              </div>
+              <div className="w-44 flex justify-center truncate">Status</div>
             </div>
             {upcomingChores?.map((chore: Chore) => {
               return (

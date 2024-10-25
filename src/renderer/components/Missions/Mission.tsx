@@ -21,7 +21,7 @@ function Mission({
   isUpcomingToDo,
 }: MissionFProps) {
   const isCompleted = getChoreStatus(mission).label === 'Done';
-  isUpcomingToDo ? console.log(mission) : null;
+
   return (
     <div
       key={mission._id}
@@ -42,7 +42,7 @@ function Mission({
       <div className="w-44 truncate">
         {mission.isOneTime
           ? "Doesn't repeat"
-          : `Repeats every ${
+          : `${
               mission.repeatFrequencyDays === 1
                 ? 'single'
                 : mission.repeatFrequencyDays
@@ -50,13 +50,13 @@ function Mission({
       </div>
       <div className="w-44 truncate">
         {isUpcomingToDo
-          ? ConvertMinutes(dayjs(mission.nextDue).diff(dayjs(), 'minute'))
-          : ConvertMinutes(
+          ? `${ConvertMinutes(dayjs(mission.nextDue).diff(dayjs(), 'minute'))}`
+          : `${ConvertMinutes(
               mission.isOneTime
                 ? mission.timeEffortMinutes
                 : (mission.timeEffortMinutes * 75 * 365) /
                     mission.repeatFrequencyDays,
-            )}
+            )}`}
       </div>
       <div className="text-white w-32 truncate flex items-center justify-center">
         <div

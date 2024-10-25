@@ -4,10 +4,8 @@ export default function ConvertMinutes(num: number) {
   const m = Math.round(num % 60);
 
   if (d > 0) {
-    return d + ' days, ' + h + ' hours, ' + m + ' minutes';
-  } else if (h > 0) {
-    return h + ' hours, ' + m + ' minutes';
+    return d + ' days';
   } else {
-    return m + ' minutes';
+    return 'Tomorrow';
   }
 }
