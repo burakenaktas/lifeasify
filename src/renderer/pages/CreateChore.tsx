@@ -69,7 +69,7 @@ function CreateChore() {
     }
     // VALIDATIONS AND CONTROLS COMPLETED
 
-    fetch('https://api.theonlypsychologist.com/add-chore', {
+    fetch('https://api.burak.solutions/add-chore', {
       body: JSON.stringify(creatingChore),
       method: 'POST',
       headers: {
