@@ -50,7 +50,10 @@ function Mission({
       </div>
       <div className="w-44 truncate">
         {isUpcomingToDo
-          ? `${ConvertMinutes(dayjs(mission.nextDue).diff(dayjs(), 'minute'))}`
+          ? `${ConvertMinutes(
+              dayjs(mission.nextDue).diff(dayjs(), 'minute'),
+              true,
+            )}`
           : `${ConvertMinutes(
               mission.isOneTime
                 ? mission.timeEffortMinutes

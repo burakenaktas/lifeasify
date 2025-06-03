@@ -62,123 +62,131 @@ function TodaysChores() {
   };
 
   return (
-    <div className="container h-full">
-      <div className="relative h-full w-full flex flex-col items-center">
-        <div className="flex flex-col h-full justify-center items-center">
-          <div className="text-2xl mb-4 w-full text-center text-white">
-            Today&apos;s Tasks
+    <div className="w-full h-full ">
+      <div className="relative h-full w-full flex flex-col items-center p-6">
+        <div className="flex flex-col h-full justify-center items-center w-full max-w-6xl">
+          <div className="text-4xl font-bold mb-8 w-full text-center">
+            <span className="bg-clip-text text-transparent text-white from-blue-400 to-purple-500">
+              Today&apos;s Tasks
+            </span>
           </div>
 
           {todaysChores?.length > 0 ? (
             <>
-              <div className="flex gap-4 items-center justify-between bg-gray-200 text-black rounded-full py-1 my-1 px-4 mr-4">
-                <div className="w-44  flex justify-center truncate border-r border-black">
+              <div className="flex gap-4 items-center justify-between bg-gray-800/50 backdrop-blur-sm text-white rounded-xl py-3 my-2 px-6 w-full shadow-lg border border-gray-700">
+                <div className="w-44 flex justify-center truncate border-r border-gray-600">
                   Task
                 </div>
-                <div className="w-44 flex justify-center border-r border-black truncate">
+                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
                   It takes
                 </div>
-                <div className="w-44 flex justify-center border-r border-black truncate">
+                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
                   Repeats every
                 </div>
-                <div className="w-44 flex justify-center border-r border-black truncate">
-                  It'll take in a life
+                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
+                  It&apos;ll take in a life
                 </div>
                 <div className="w-44 flex justify-center truncate">Status</div>
               </div>
 
-              {todaysChores?.map((chore: Chore) => {
-                return (
+              <div className="w-full space-y-2 overflow-y-auto max-h-[calc(100vh-400px)] pr-2">
+                {todaysChores?.map((chore: Chore) => (
                   <Mission
+                    key={chore._id}
                     mission={chore}
                     checkButtonClicked={checkButtonClicked}
                     setDeletingChore={setDeletingChore}
                     isCheckingToDo={isCheckingToDo}
+                    isUpcomingToDo={false}
                   />
-                );
-              })}
+                ))}
+              </div>
             </>
           ) : (
-            <div className="flex flex-col justify-center items-center">
-              No chores for today! Enjoy your day!
+            <div className="flex flex-col justify-center items-center bg-gray-800/30 backdrop-blur-sm rounded-xl p-8 border border-gray-700">
+              <div className="text-xl text-gray-300">No chores for today!</div>
+              <div className="text-gray-400 mt-2">Enjoy your day! 🎉</div>
             </div>
           )}
         </div>
 
         {upcomingChores?.length > 0 ? (
-          <div className="flex flex-col h-full justify-center items-center">
-            <div className="text-2xl mb-4 w-full text-center text-white">
-              Upcoming Tasks
+          <div className="flex flex-col h-full justify-center items-center w-full max-w-6xl mt-8">
+            <div className="text-4xl font-bold mb-8 w-full text-center">
+              <span className="bg-clip-text text-transparent text-white from-purple-400 to-pink-500">
+                Upcoming Tasks
+              </span>
             </div>
-            <div className="flex gap-4 items-center justify-between bg-gray-200 text-black rounded-full py-1 my-1 px-4 mr-4">
-              <div className="w-44  flex justify-center truncate border-r border-black">
+            <div className="flex gap-4 items-center justify-between bg-gray-800/50 backdrop-blur-sm text-white rounded-xl py-3 my-2 px-6 w-full shadow-lg border border-gray-700">
+              <div className="w-44 flex justify-center truncate border-r border-gray-600">
                 Task
               </div>
-              <div className="w-44 flex justify-center border-r border-black truncate">
+              <div className="w-44 flex justify-center border-r border-gray-600 truncate">
                 It takes
               </div>
-              <div className="w-44 flex justify-center border-r border-black truncate">
+              <div className="w-44 flex justify-center border-r border-gray-600 truncate">
                 Repeats every
               </div>
-              <div className="w-44 flex justify-center border-r border-black truncate">
+              <div className="w-44 flex justify-center border-r border-gray-600 truncate">
                 When
               </div>
               <div className="w-44 flex justify-center truncate">Status</div>
             </div>
-            {upcomingChores?.map((chore: Chore) => {
-              return (
+            <div className="w-full space-y-2 overflow-y-auto max-h-[calc(100vh-400px)] pr-2">
+              {upcomingChores?.map((chore: Chore) => (
                 <Mission
+                  key={chore._id}
                   mission={chore}
                   checkButtonClicked={checkButtonClicked}
                   setDeletingChore={setDeletingChore}
                   isCheckingToDo={isCheckingToDo}
-                  isUpcomingToDo={true}
+                  isUpcomingToDo
                 />
-              );
-            })}
+              ))}
+            </div>
           </div>
         ) : null}
 
         {deletingChore && (
-          <div className="fixed top-0 z-50 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-black rounded-lg px-12 py-6">
-              <div className="text-lg border-b border-gray-800 text-center pb-2">
+          <div className="fixed top-0 z-50 left-0 w-full h-full bg-black/80 backdrop-blur-sm flex justify-center items-center">
+            <div className="bg-gray-900 rounded-xl px-12 py-8 border border-gray-700 shadow-2xl transform transition-all">
+              <div className="text-xl border-b border-gray-700 text-center pb-4">
                 You are deleting
-                <div className="flex justify-center">
-                  <i>{deletingChore.name}</i>c
+                <div className="flex justify-center mt-2">
+                  <i className="text-purple-400">{deletingChore.name}</i>
                 </div>
               </div>
-              <div className="flex gap-4 mt-4 justify-end">
-                <div
-                  aria-hidden="true"
-                  className="bg-red-600 rounded-full px-4 py-1 text-center text-md cursor-pointer hover:bg-red-700"
+              <div className="flex gap-4 mt-6 justify-end">
+                <button
+                  type="button"
+                  className="bg-red-600 hover:bg-red-700 transition-colors rounded-full px-6 py-2 text-center text-md font-medium"
                   onClick={() => {
                     deleteChore();
                     setDeletingChore(null);
                   }}
                 >
                   Yes, delete
-                </div>
-                <div
-                  aria-hidden="true"
-                  className="bg-gray-600 rounded-full px-4 py-1 text-center text-md cursor-pointer hover:bg-gray-700"
+                </button>
+                <button
+                  type="button"
+                  className="bg-gray-700 hover:bg-gray-600 transition-colors rounded-full px-6 py-2 text-center text-md font-medium"
                   onClick={() => setDeletingChore(null)}
                 >
                   No, I regret
-                </div>
+                </button>
               </div>
             </div>
           </div>
         )}
 
-        <div className="absolute bottom-0 w-full flex justify-center items-center">
-          <div
-            aria-hidden="true"
-            className="bg-gray-800 rounded-md px-6 py-1 my-2 text-lg cursor-pointer hover:bg-gray-900"
+        <div className="absolute bottom-8 w-full flex justify-center items-center">
+          <button
+            type="button"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all rounded-full px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
             onClick={() => push('/create-chore')}
           >
             Create Chore
-          </div>
+          </button>
         </div>
       </div>
     </div>

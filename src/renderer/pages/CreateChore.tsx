@@ -2,7 +2,6 @@ import { TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 import dayjs from 'dayjs';
-import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import ConvertMinutes from '../../helpers/ConvertMinutes';
 
@@ -42,7 +41,6 @@ function CreateChore() {
     repeatFrequencyDays: null,
     note: '',
     nextDue: dayjs().format('YYYY-MM-DD'),
-    isOneTime: false,
   });
   const [noTimeEffort, setNoTimeEffort] = useState(false);
 
@@ -58,16 +56,9 @@ function CreateChore() {
     if (!values.timeEffortMinutes) {
       setNoTimeEffort(true);
       return;
-    } else {
-      setNoTimeEffort(false);
     }
 
     const creatingChore = values;
-
-    if (!creatingChore.repeatFrequencyDays) {
-      creatingChore.isOneTime = true;
-    }
-    // VALIDATIONS AND CONTROLS COMPLETED
 
     fetch('https://api.burak.solutions/add-chore', {
       body: JSON.stringify(creatingChore),
@@ -83,117 +74,180 @@ function CreateChore() {
   };
 
   return (
-    <div>
-      <div className="flex flex-col">
-        <h1 className="text-2xl mb-4 w-full text-center text-white">
-          Create Chore
-        </h1>
+    <div className="w-full h-full">
+      <div className="relative h-full w-full flex flex-col items-center p-6">
+        <div className="flex flex-col h-full justify-center items-center w-full max-w-2xl">
+          <div className="text-4xl font-bold mb-8 w-full text-center">
+            <span className="bg-clip-text text-transparent text-white from-blue-400 to-purple-500">
+              Create Chore
+            </span>
+          </div>
 
-        <div className="bg-gray-200 p-6 py-2 rounded-lg">
-          <div className="flex flex-col gap-4 p-8 py-4 rounded-lg">
-            <TextField
-              id="standard-basic"
-              color="info"
-              name="name"
-              label="Chore Name"
-              variant="standard"
-              onChange={handleChange}
-              value={values.name}
-            />
-
-            <TextField
-              id="formatted-numberformat-input"
-              onChange={handleChange}
-              label="Time Effort (minute)"
-              name="timeEffortMinutes"
-              error={noTimeEffort}
-              value={values.timeEffortMinutes}
-              InputProps={{
-                inputComponent: NumericFormatCustom as any,
-              }}
-              variant="standard"
-            />
-
-            <TextField
-              label="Repeat Frequency (day)"
-              value={values.repeatFrequencyDays}
-              onChange={handleChange}
-              name="repeatFrequencyDays"
-              id="formatted-numberformat-input"
-              InputProps={{
-                inputComponent: NumericFormatCustom as any,
-              }}
-              className={classNames(
-                'transition duration-300',
-                values.isOneTime && 'opacity-0 invisible',
-              )}
-              variant="standard"
-            />
-
-            <div className="text-xs mt-2 -mb-2 text-gray-800">Start Date</div>
-            <input
-              type="date"
-              className="px-2 text-gray-700"
-              name="nextDue"
-              value={values.nextDue}
-              onChange={handleChange}
-            />
-
-            <TextField
-              label="Note"
-              value={values.note}
-              onChange={handleChange}
-              name="note"
-              variant="standard"
-            />
-
-            <div className="flex">
-              <input
-                type="checkbox"
-                name="isOneTime"
-                value={values.isOneTime ? 1 : 0}
-                onChange={() => {
-                  setValues({
-                    ...values,
-                    isOneTime: !values.isOneTime,
-                    repeatFrequencyDays: null,
-                  });
+          <div className="w-full bg-gray-800/80 backdrop-blur-sm rounded-xl p-8 border border-gray-600 shadow-lg">
+            <div className="flex flex-col gap-6">
+              <TextField
+                id="standard-basic"
+                color="primary"
+                name="name"
+                label="Chore Name"
+                variant="standard"
+                onChange={handleChange}
+                value={values.name}
+                className="text-white"
+                InputLabelProps={{
+                  className: 'text-gray-300',
+                  style: { color: '#E5E7EB' },
+                }}
+                InputProps={{
+                  className: 'text-white',
+                  style: { color: '#FFFFFF' },
+                }}
+                sx={{
+                  '& .MuiInput-underline:before': {
+                    borderBottomColor: '#4B5563',
+                  },
+                  '& .MuiInput-underline:hover:before': {
+                    borderBottomColor: '#6B7280',
+                  },
+                  '& .MuiInput-underline:after': {
+                    borderBottomColor: '#3B82F6',
+                  },
                 }}
               />
-              <div className="ml-1 text-black text-xs">One time chore</div>
+
+              <TextField
+                id="formatted-numberformat-input"
+                onChange={handleChange}
+                label="Time Effort (minute)"
+                name="timeEffortMinutes"
+                error={noTimeEffort}
+                value={values.timeEffortMinutes}
+                InputProps={{
+                  inputComponent: NumericFormatCustom as any,
+                  className: 'text-white',
+                  style: { color: '#FFFFFF' },
+                }}
+                InputLabelProps={{
+                  className: 'text-gray-300',
+                  style: { color: '#E5E7EB' },
+                }}
+                sx={{
+                  '& .MuiInput-underline:before': {
+                    borderBottomColor: '#4B5563',
+                  },
+                  '& .MuiInput-underline:hover:before': {
+                    borderBottomColor: '#6B7280',
+                  },
+                  '& .MuiInput-underline:after': {
+                    borderBottomColor: '#3B82F6',
+                  },
+                }}
+                variant="standard"
+              />
+
+              <TextField
+                label="Repeat Frequency (day)"
+                value={values.repeatFrequencyDays}
+                onChange={handleChange}
+                name="repeatFrequencyDays"
+                id="formatted-numberformat-input"
+                InputProps={{
+                  inputComponent: NumericFormatCustom as any,
+                  className: 'text-white',
+                  style: { color: '#FFFFFF' },
+                }}
+                InputLabelProps={{
+                  className: 'text-gray-300',
+                  style: { color: '#E5E7EB' },
+                }}
+                sx={{
+                  '& .MuiInput-underline:before': {
+                    borderBottomColor: '#4B5563',
+                  },
+                  '& .MuiInput-underline:hover:before': {
+                    borderBottomColor: '#6B7280',
+                  },
+                  '& .MuiInput-underline:after': {
+                    borderBottomColor: '#3B82F6',
+                  },
+                }}
+                variant="standard"
+              />
+
+              <div className="flex flex-col gap-2">
+                <label htmlFor="start-date" className="text-sm text-gray-300">
+                  Start Date
+                </label>
+                <input
+                  id="start-date"
+                  type="date"
+                  className="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  name="nextDue"
+                  value={values.nextDue}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <TextField
+                label="Note"
+                value={values.note}
+                onChange={handleChange}
+                name="note"
+                variant="standard"
+                InputLabelProps={{
+                  className: 'text-gray-300',
+                  style: { color: '#E5E7EB' },
+                }}
+                InputProps={{
+                  className: 'text-white',
+                  style: { color: '#FFFFFF' },
+                }}
+                sx={{
+                  '& .MuiInput-underline:before': {
+                    borderBottomColor: '#4B5563',
+                  },
+                  '& .MuiInput-underline:hover:before': {
+                    borderBottomColor: '#6B7280',
+                  },
+                  '& .MuiInput-underline:after': {
+                    borderBottomColor: '#3B82F6',
+                  },
+                }}
+              />
             </div>
-          </div>
 
-          <div
-            aria-hidden="true"
-            className="bg-black rounded-full px-2 mt-4 py-1 text-center text-md cursor-pointer  hover:bg-gray-800"
-            onClick={handleCreate}
-          >
-            Create
-          </div>
+            <div className="flex flex-col gap-4 mt-8">
+              <button
+                type="button"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all rounded-full px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
+                onClick={handleCreate}
+              >
+                Create
+              </button>
 
-          <div
-            aria-hidden="true"
-            className="mt-2 text-center cursor-pointer rounded-full text-gray-800 hover:bg-gray-300 hover:bg-opacity-50 px-2 py-1"
-            onClick={() => push('/main')}
-          >
-            Back
-          </div>
+              <button
+                type="button"
+                className="w-full bg-gray-700 hover:bg-gray-600 transition-colors rounded-full px-8 py-3 text-lg font-medium"
+                onClick={() => push('/main')}
+              >
+                Back
+              </button>
+            </div>
 
-          <div className="mt-2 text-center w-60 h-12">
-            {values.timeEffortMinutes &&
-              (values.repeatFrequencyDays || values.isOneTime) && (
-                <div className="text-gray-400 opacity-50 text-xs">
+            {values.timeEffortMinutes && values.repeatFrequencyDays && (
+              <div className="w-40 mt-6 text-center">
+                <div className="text-gray-300 text-sm">
                   * It will take{' '}
-                  {ConvertMinutes(
-                    values.isOneTime
-                      ? values.timeEffortMinutes
-                      : (values.timeEffortMinutes * 75 * 365) /
-                          (values.repeatFrequencyDays ?? 1),
-                  )}{' '}
+                  <span className="text-blue-400 font-medium">
+                    {ConvertMinutes(
+                      (values.timeEffortMinutes * 75 * 365) /
+                        values.repeatFrequencyDays,
+                    )}
+                  </span>{' '}
                   days along your life.
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
       </div>
