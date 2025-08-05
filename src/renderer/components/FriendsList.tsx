@@ -1,85 +1,12 @@
 import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import dayjs from 'dayjs';
 import { Contact } from '../../types/types';
-import store from '../../store/store';
-
-// Mock data
-const mockContacts: Contact[] = [
-  {
-    _id: '1',
-    name: 'Sarah Johnson',
-    contactInfo: 'sarah.johnson@email.com',
-    lastContactDate: dayjs().subtract(15, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '2',
-    name: 'Mike Chen',
-    contactInfo: '+1 555 123 4567',
-    lastContactDate: dayjs().subtract(45, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '3',
-    name: 'Emma Wilson',
-    contactInfo: 'emma.wilson@outlook.com',
-    lastContactDate: dayjs().subtract(5, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '4',
-    name: 'Alex Rodriguez',
-    contactInfo: '+1 532 987 6543',
-    lastContactDate: dayjs().subtract(200, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '5',
-    name: 'David Lee',
-    contactInfo: 'david.lee@gmail.com',
-    lastContactDate: dayjs().subtract(90, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '6',
-    name: 'Lisa Park',
-    contactInfo: '+1 543 456 7890',
-    lastContactDate: dayjs().subtract(3, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '7',
-    name: 'James Brown',
-    contactInfo: 'james.brown@company.com',
-    lastContactDate: dayjs().subtract(22, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '8',
-    name: 'Maria Garcia',
-    contactInfo: '+1 555 987 1234',
-    lastContactDate: dayjs().subtract(8, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '9',
-    name: 'Robert Smith',
-    contactInfo: 'robert.smith@tech.io',
-    lastContactDate: dayjs().subtract(120, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '10',
-    name: 'Jennifer Davis',
-    contactInfo: '+1 444 555 6789',
-    lastContactDate: dayjs().subtract(1, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '11',
-    name: 'Michael Taylor',
-    contactInfo: 'michael.taylor@startup.com',
-    lastContactDate: dayjs().subtract(300, 'days').format('YYYY-MM-DD'),
-  },
-  {
-    _id: '12',
-    name: 'Ashley White',
-    contactInfo: '+1 333 444 5555',
-    lastContactDate: dayjs().subtract(67, 'days').format('YYYY-MM-DD'),
-  },
-];
+import contactService from '../../services/contactService';
 
 function FriendsList() {
+  const queryClient = useQueryClient();
+
   const [showConfirmDialog, setShowConfirmDialog] = useState<string | null>(
     null,
   );
@@ -88,35 +15,64 @@ function FriendsList() {
     name: '',
     contactInfo: '',
   });
-  const contacts = store((state: any) => state.contacts);
-  const updateContactLastMeeting = store(
-    (state: any) => state.updateContactLastMeeting,
-  );
-  const addContact = store((state: any) => state.addContact);
-  const setContacts = store((state: any) => state.setContacts);
 
-  // Initialize mock data if no contacts exist
-  if (contacts.length === 0) {
-    setContacts(mockContacts);
-  }
-
-  // Sort contacts by priority: longest time since last contact first
-  const sortedContacts = [...(contacts || [])].sort((a, b) => {
-    const dateA = dayjs(a.lastContactDate);
-    const dateB = dayjs(b.lastContactDate);
-    return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
+  // Fetch contacts with React Query
+  const {
+    data: contacts = [],
+    isLoading,
+    error,
+  } = useQuery('contacts', contactService.getContacts, {
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+    retry: 1, // Reduce retries for faster feedback
+    retryDelay: 1000, // 1 second delay between retries
   });
+
+  // Add contact mutation
+  const addContactMutation = useMutation(contactService.addContact, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('contacts');
+      setShowAddContact(false);
+      setNewContact({ name: '', contactInfo: '' });
+    },
+    onError: (err: Error) => {
+      // eslint-disable-next-line no-console
+      console.error('Failed to add contact:', err);
+      // eslint-disable-next-line no-alert
+      alert(`Failed to add contact: ${err.message}`);
+    },
+  });
+
+  // Update last contact date mutation
+  const updateContactMutation = useMutation(
+    contactService.updateLastContactDate,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('contacts');
+        setShowConfirmDialog(null);
+      },
+      onError: (err: Error) => {
+        // eslint-disable-next-line no-console
+        console.error('Failed to update contact:', err);
+        // eslint-disable-next-line no-alert
+        alert(`Failed to update contact: ${err.message}`);
+      },
+    },
+  );
+
+  // Contacts are already sorted by priority from the backend
+  const sortedContacts = contacts || [];
 
   const getContactStatusColor = (lastContactDate: string) => {
     const daysSinceLastContact = dayjs().diff(dayjs(lastContactDate), 'days');
 
     if (daysSinceLastContact <= 30) {
       return 'bg-green-500/20 text-green-300 border-green-500/30';
-    } else if (daysSinceLastContact <= 180) {
-      return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
-    } else {
-      return 'bg-red-500/20 text-red-300 border-red-500/30';
     }
+    if (daysSinceLastContact <= 180) {
+      return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+    }
+    return 'bg-red-500/20 text-red-300 border-red-500/30';
   };
 
   const getStatusText = (lastContactDate: string) => {
@@ -124,20 +80,23 @@ function FriendsList() {
 
     if (daysSinceLastContact === 0) {
       return 'Today';
-    } else if (daysSinceLastContact === 1) {
+    }
+    if (daysSinceLastContact === 1) {
       return '1 day ago';
-    } else if (daysSinceLastContact <= 30) {
+    }
+    if (daysSinceLastContact <= 30) {
       return `${daysSinceLastContact} days ago`;
-    } else if (daysSinceLastContact <= 60) {
+    }
+    if (daysSinceLastContact <= 60) {
       const months = Math.floor(daysSinceLastContact / 30);
       return `${months} month${months > 1 ? 's' : ''} ago`;
-    } else if (daysSinceLastContact <= 180) {
-      const months = Math.floor(daysSinceLastContact / 30);
-      return `${months} months ago`;
-    } else {
+    }
+    if (daysSinceLastContact <= 180) {
       const months = Math.floor(daysSinceLastContact / 30);
       return `${months} months ago`;
     }
+    const months = Math.floor(daysSinceLastContact / 30);
+    return `${months} months ago`;
   };
 
   const handleContactUpdate = (contactId: string) => {
@@ -145,23 +104,45 @@ function FriendsList() {
   };
 
   const confirmContactUpdate = (contactId: string) => {
-    updateContactLastMeeting(contactId, dayjs().format('YYYY-MM-DD'));
-    setShowConfirmDialog(null);
+    updateContactMutation.mutate(contactId);
   };
 
   const handleAddContact = () => {
     if (newContact.name.trim() && newContact.contactInfo.trim()) {
-      const contact: Contact = {
-        _id: Date.now().toString(),
+      addContactMutation.mutate({
         name: newContact.name.trim(),
         contactInfo: newContact.contactInfo.trim(),
-        lastContactDate: dayjs().format('YYYY-MM-DD'),
-      };
-      addContact(contact);
-      setNewContact({ name: '', contactInfo: '' });
-      setShowAddContact(false);
+      });
     }
   };
+
+  // Loading and error states
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-white text-lg">Loading contacts...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <div className="text-red-400 text-lg">Unable to connect to server</div>
+        <div className="text-gray-400 text-sm text-center max-w-md">
+          Make sure your backend server is running on localhost:3001 or update
+          the API URL in contactService.ts
+        </div>
+        <button
+          type="button"
+          onClick={() => queryClient.invalidateQueries('contacts')}
+          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full overflow-hidden">
@@ -204,8 +185,9 @@ function FriendsList() {
                 </div>
 
                 <div className="flex-1 w-full space-y-2 overflow-y-auto pr-2 custom-scrollbar min-h-0">
-                  {sortedContacts?.map((contact: Contact, index: number) => (
+                  {sortedContacts?.map((contact: Contact) => (
                     <div
+                      // eslint-disable-next-line no-underscore-dangle
                       key={contact._id}
                       className={`flex gap-4 items-center justify-between backdrop-blur-sm text-white rounded-xl py-4 px-6 w-full shadow-lg border transition-all hover:scale-[1.01] ${getContactStatusColor(
                         contact.lastContactDate,
@@ -225,11 +207,15 @@ function FriendsList() {
                       <div className="w-32 flex justify-center">
                         <button
                           type="button"
+                          // eslint-disable-next-line no-underscore-dangle
                           onClick={() => handleContactUpdate(contact._id)}
-                          className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 rounded-lg px-4 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 flex items-center gap-1"
+                          className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 rounded-lg px-4 py-2 text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={updateContactMutation.isLoading}
                         >
                           <span>✓</span>
-                          Update
+                          {updateContactMutation.isLoading
+                            ? 'Updating...'
+                            : 'Update'}
                         </button>
                       </div>
                     </div>
@@ -239,8 +225,8 @@ function FriendsList() {
                 {/* Priority explanation */}
                 <div className="mt-4 text-center text-sm text-gray-400 flex-shrink-0">
                   <span>
-                    Sorted by priority: People you haven't connected with the
-                    longest appear first
+                    Sorted by priority: People you haven&apos;t connected with
+                    the longest appear first
                   </span>
                 </div>
               </>
@@ -275,6 +261,7 @@ function FriendsList() {
                   <i className="text-blue-400">
                     {
                       sortedContacts?.find(
+                        // eslint-disable-next-line no-underscore-dangle
                         (c: Contact) => c._id === showConfirmDialog,
                       )?.name
                     }
@@ -284,10 +271,13 @@ function FriendsList() {
               <div className="flex gap-4 mt-6 justify-end">
                 <button
                   type="button"
-                  className="bg-green-600 hover:bg-green-700 transition-colors rounded-full px-6 py-2 text-center text-md font-medium"
+                  className="bg-green-600 hover:bg-green-700 transition-colors rounded-full px-6 py-2 text-center text-md font-medium disabled:opacity-50"
                   onClick={() => confirmContactUpdate(showConfirmDialog)}
+                  disabled={updateContactMutation.isLoading}
                 >
-                  Yes, I did
+                  {updateContactMutation.isLoading
+                    ? 'Updating...'
+                    : 'Yes, I did'}
                 </button>
                 <button
                   type="button"
@@ -309,6 +299,7 @@ function FriendsList() {
               </div>
               <div className="space-y-4">
                 <div>
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Name
                   </label>
@@ -323,6 +314,7 @@ function FriendsList() {
                   />
                 </div>
                 <div>
+                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Contact Info
                   </label>
@@ -346,10 +338,12 @@ function FriendsList() {
                   className="bg-green-600 hover:bg-green-700 transition-colors rounded-full px-6 py-2 text-center text-md font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handleAddContact}
                   disabled={
-                    !newContact.name.trim() || !newContact.contactInfo.trim()
+                    !newContact.name.trim() ||
+                    !newContact.contactInfo.trim() ||
+                    addContactMutation.isLoading
                   }
                 >
-                  Add Friend
+                  {addContactMutation.isLoading ? 'Adding...' : 'Add Friend'}
                 </button>
                 <button
                   type="button"

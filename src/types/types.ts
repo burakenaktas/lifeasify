@@ -18,6 +18,10 @@ interface Contact {
   name: string;
   contactInfo: string;
   lastContactDate: string;
+  userId?: string;
+  daysSinceContact?: number;
+  status?: string;
+  priority?: string;
 }
 
 export default Chore;
