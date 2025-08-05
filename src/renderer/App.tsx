@@ -6,6 +6,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import './App.css';
+import './styles/scrollbar.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { useEffect } from 'react';
 // import Onboarding from './pages/Onboarding';

@@ -1,9 +1,10 @@
 import { create } from 'zustand';
-import Chore from '../types/types';
+import Chore, { Contact } from '../types/types';
 
 const store = create((set) => ({
   chores: [],
   choreHistory: [],
+  contacts: [],
   addChore: (chore: Chore) =>
     set((state: any) => ({ chores: [...state.chores, chore] })),
   removeChore: (chore: Chore) =>
@@ -25,6 +26,23 @@ const store = create((set) => ({
   setChores: (chores: Chore[]) =>
     set(() => ({
       chores,
+    })),
+  addContact: (contact: Contact) =>
+    set((state: any) => ({ contacts: [...state.contacts, contact] })),
+  removeContact: (contact: Contact) =>
+    set((state: any) => ({
+      contacts: state.contacts.filter((c: Contact) => c !== contact),
+    })),
+  updateContactLastMeeting: (contactId: string, newDate: string) =>
+    set((state: any) => ({
+      contacts: state.contacts.map((c: Contact) =>
+        // eslint-disable-next-line no-underscore-dangle
+        c._id === contactId ? { ...c, lastContactDate: newDate } : c,
+      ),
+    })),
+  setContacts: (contacts: Contact[]) =>
+    set(() => ({
+      contacts,
     })),
 }));
 

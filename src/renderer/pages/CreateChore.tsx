@@ -174,14 +174,18 @@ function CreateChore() {
                 variant="standard"
               />
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="start-date" className="text-sm text-gray-300">
+              <div className="flex flex-col gap-2 w-full">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label
+                  htmlFor="start-date"
+                  className="text-sm text-gray-300 w-full"
+                >
                   Start Date
                 </label>
                 <input
                   id="start-date"
                   type="date"
-                  className="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-full"
                   name="nextDue"
                   value={values.nextDue}
                   onChange={handleChange}

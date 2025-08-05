@@ -44,6 +44,7 @@ function TodaysChores() {
       if (isDeletingChore) return;
 
       const response = await fetch(
+        // eslint-disable-next-line no-underscore-dangle
         `https://api.burak.solutions/chores/${deletingChore?._id}`,
         {
           method: 'DELETE',
@@ -62,90 +63,104 @@ function TodaysChores() {
   };
 
   return (
-    <div className="w-full h-full ">
-      <div className="relative h-full w-full flex flex-col items-center p-6">
-        <div className="flex flex-col h-full justify-center items-center w-full max-w-6xl">
-          <div className="text-4xl font-bold mb-8 w-full text-center">
-            <span className="bg-clip-text text-transparent text-white from-blue-400 to-purple-500">
-              Today&apos;s Tasks
-            </span>
+    <div className="w-full h-full overflow-hidden">
+      <div className="h-full w-full flex flex-col px-6 overflow-hidden">
+        <div className="flex-1 w-full max-w-6xl mx-auto flex flex-col overflow-hidden">
+          <div className="text-4xl font-bold mb-6 w-full text-center flex-shrink-0">
+            <span className="text-white">Today&apos;s Tasks</span>
           </div>
 
-          {todaysChores?.length > 0 ? (
-            <>
-              <div className="flex gap-4 items-center justify-between bg-gray-800/50 backdrop-blur-sm text-white rounded-xl py-3 my-2 px-6 w-full shadow-lg border border-gray-700">
-                <div className="w-44 flex justify-center truncate border-r border-gray-600">
-                  Task
+          <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+            {todaysChores?.length > 0 ? (
+              <>
+                <div className="flex gap-4 items-center justify-between bg-gray-800/60 backdrop-blur-sm text-white rounded-xl py-4 mb-4 px-6 w-full shadow-lg border border-gray-600 flex-shrink-0">
+                  <div className="w-44 flex justify-center truncate border-r border-gray-600">
+                    <span className="font-semibold text-gray-200">Task</span>
+                  </div>
+                  <div className="w-44 flex justify-center border-r border-gray-600 truncate">
+                    <span className="font-semibold text-gray-200">
+                      Duration
+                    </span>
+                  </div>
+                  <div className="w-44 flex justify-center border-r border-gray-600 truncate">
+                    <span className="font-semibold text-gray-200">
+                      Frequency
+                    </span>
+                  </div>
+                  <div className="w-44 flex justify-center border-r border-gray-600 truncate">
+                    <span className="font-semibold text-gray-200">
+                      Lifetime
+                    </span>
+                  </div>
+                  <div className="w-44 flex justify-center truncate">
+                    <span className="font-semibold text-gray-200">Status</span>
+                  </div>
                 </div>
-                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
-                  It takes
-                </div>
-                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
-                  Repeats every
-                </div>
-                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
-                  It&apos;ll take in a life
-                </div>
-                <div className="w-44 flex justify-center truncate">Status</div>
-              </div>
 
-              <div className="w-full space-y-2 overflow-y-auto max-h-[calc(100vh-400px)] pr-2">
-                {todaysChores?.map((chore: Chore) => (
+                <div className="flex-1 w-full space-y-2 overflow-y-auto pr-2 custom-scrollbar min-h-0">
+                  {todaysChores?.map((chore: Chore) => (
+                    <Mission
+                      // eslint-disable-next-line no-underscore-dangle
+                      key={chore._id}
+                      mission={chore}
+                      checkButtonClicked={checkButtonClicked}
+                      setDeletingChore={setDeletingChore}
+                      isCheckingToDo={isCheckingToDo}
+                      isUpcomingToDo={false}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex flex-col justify-center items-center bg-gray-800/30 backdrop-blur-sm rounded-xl p-12 border border-gray-700">
+                <div className="text-2xl text-gray-300 mb-3">
+                  No tasks for today!
+                </div>
+                <div className="text-gray-400 text-center">
+                  Enjoy your day! 🎉
+                </div>
+              </div>
+            )}
+          </div>
+
+          {upcomingChores?.length > 0 && (
+            <div className="flex-shrink-0 mt-8">
+              <div className="text-3xl font-bold mb-6 w-full text-center">
+                <span className="text-white">Upcoming Tasks</span>
+              </div>
+              <div className="flex gap-4 items-center justify-between bg-gray-800/60 backdrop-blur-sm text-white rounded-xl py-4 mb-4 px-6 w-full shadow-lg border border-gray-600">
+                <div className="w-44 flex justify-center truncate border-r border-gray-600">
+                  <span className="font-semibold text-gray-200">Task</span>
+                </div>
+                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
+                  <span className="font-semibold text-gray-200">Duration</span>
+                </div>
+                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
+                  <span className="font-semibold text-gray-200">Frequency</span>
+                </div>
+                <div className="w-44 flex justify-center border-r border-gray-600 truncate">
+                  <span className="font-semibold text-gray-200">Due Date</span>
+                </div>
+                <div className="w-44 flex justify-center truncate">
+                  <span className="font-semibold text-gray-200">Status</span>
+                </div>
+              </div>
+              <div className="w-full space-y-2 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+                {upcomingChores?.map((chore: Chore) => (
                   <Mission
+                    // eslint-disable-next-line no-underscore-dangle
                     key={chore._id}
                     mission={chore}
                     checkButtonClicked={checkButtonClicked}
                     setDeletingChore={setDeletingChore}
                     isCheckingToDo={isCheckingToDo}
-                    isUpcomingToDo={false}
+                    isUpcomingToDo
                   />
                 ))}
               </div>
-            </>
-          ) : (
-            <div className="flex flex-col justify-center items-center bg-gray-800/30 backdrop-blur-sm rounded-xl p-8 border border-gray-700">
-              <div className="text-xl text-gray-300">No chores for today!</div>
-              <div className="text-gray-400 mt-2">Enjoy your day! 🎉</div>
             </div>
           )}
         </div>
-
-        {upcomingChores?.length > 0 ? (
-          <div className="flex flex-col h-full justify-center items-center w-full max-w-6xl mt-8">
-            <div className="text-4xl font-bold mb-8 w-full text-center">
-              <span className="bg-clip-text text-transparent text-white from-purple-400 to-pink-500">
-                Upcoming Tasks
-              </span>
-            </div>
-            <div className="flex gap-4 items-center justify-between bg-gray-800/50 backdrop-blur-sm text-white rounded-xl py-3 my-2 px-6 w-full shadow-lg border border-gray-700">
-              <div className="w-44 flex justify-center truncate border-r border-gray-600">
-                Task
-              </div>
-              <div className="w-44 flex justify-center border-r border-gray-600 truncate">
-                It takes
-              </div>
-              <div className="w-44 flex justify-center border-r border-gray-600 truncate">
-                Repeats every
-              </div>
-              <div className="w-44 flex justify-center border-r border-gray-600 truncate">
-                When
-              </div>
-              <div className="w-44 flex justify-center truncate">Status</div>
-            </div>
-            <div className="w-full space-y-2 overflow-y-auto max-h-[calc(100vh-400px)] pr-2">
-              {upcomingChores?.map((chore: Chore) => (
-                <Mission
-                  key={chore._id}
-                  mission={chore}
-                  checkButtonClicked={checkButtonClicked}
-                  setDeletingChore={setDeletingChore}
-                  isCheckingToDo={isCheckingToDo}
-                  isUpcomingToDo
-                />
-              ))}
-            </div>
-          </div>
-        ) : null}
 
         {deletingChore && (
           <div className="fixed top-0 z-50 left-0 w-full h-full bg-black/80 backdrop-blur-sm flex justify-center items-center">

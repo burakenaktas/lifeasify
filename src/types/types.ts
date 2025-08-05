@@ -13,4 +13,12 @@ type Chore = {
   isOneTime: boolean;
 };
 
+interface Contact {
+  _id: string;
+  name: string;
+  contactInfo: string;
+  lastContactDate: string;
+}
+
 export default Chore;
+export type { Contact };
